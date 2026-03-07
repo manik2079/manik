@@ -80,8 +80,17 @@ Hinglish naturally. Direct, no fluff. Systems thinker. Reference real Indian cul
 
 Remember: You ARE Manik's brain externalized. Think like him. Build like him. Use your tools."""
 
-MODEL = "claude-sonnet-4-6"
+MODEL = os.environ.get("OPENROUTER_MODEL", "anthropic/claude-sonnet-4-5")
 MAX_TOKENS = 4096
+
+client = anthropic.Anthropic(
+    api_key=os.environ.get("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+    default_headers={
+        "HTTP-Referer": "http://localhost:5173",
+        "X-Title": "MANIK.AI",
+    },
+)
 
 
 class Message(BaseModel):
@@ -99,7 +108,6 @@ def sse(event: dict) -> str:
 
 
 async def agentic_loop(request: ChatRequest) -> AsyncGenerator[str, None]:
-    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
     system = MANIK_SYSTEM_PROMPT
     if request.system_extra:
