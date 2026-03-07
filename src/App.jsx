@@ -26,6 +26,8 @@ const SKILLS = [
   { id: "converter", name: "Script Converter", icon: "🔄", color: "#0891b2", tags: ["convert","script","language","4 languages","regional","translate"], level: "Expert" },
 ];
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "";
+
 const QUICK_ACTIONS = [
   { label: "🎬 Write a Promo Script", prompt: "Ek Bhojpuri action show ke liye 30s TV promo script likh — show name 'Baaghi Birju', story: ek gaon ka ladka jo zamindar ke khilaf khada hota hai" },
   { label: "🏗️ Architect a Tool", prompt: "Mujhe ek asset search tool banana hai jo natural language query se footage dhundhe — architecture bata" },
@@ -85,7 +87,7 @@ export default function ManikAI() {
         .slice(-10)
         .map(m => ({ role: m.role, content: m.content }));
 
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
