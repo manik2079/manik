@@ -1,6 +1,5 @@
 import asyncio
 import os
-import subprocess
 import requests
 from pathlib import Path
 

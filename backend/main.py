@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+from pathlib import Path
 from typing import AsyncGenerator
 
 import anthropic
@@ -12,7 +13,10 @@ from pydantic import BaseModel
 
 from tools import TOOL_DEFINITIONS, execute_tool
 
-load_dotenv()
+# Load .env from repo root (works regardless of where uvicorn is launched from)
+load_dotenv(Path(__file__).parent.parent / ".env")
+# Also try backend/.env as fallback
+load_dotenv(Path(__file__).parent / ".env")
 
 app = FastAPI(title="MANIK.AI Backend")
 
