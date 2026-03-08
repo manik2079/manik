@@ -1,0 +1,218 @@
+# ═══════════════════════════════════════════════════════════════════
+# MANIK.AI — Master Configuration File
+# ═══════════════════════════════════════════════════════════════════
+#
+# HOW TO CUSTOMIZE:
+#   • Add a skill  → append to the `skills` list below
+#   • Add a tool   → append to the `tools` list below
+#   • Change model → edit `smart_routing.tiers`
+#   • Change personality → edit `agent.personality_extra`
+#
+# No code changes needed. Just edit this file and restart the backend.
+# ═══════════════════════════════════════════════════════════════════
+
+agent:
+  name: MANIK.AI
+  version: "2.0.0"
+  tagline: "Free • Open-Source • Self-Hosted Autonomous AI Agent"
+  # Extra lines appended to the system prompt (optional)
+  personality_extra: ""
+
+# ── Smart Routing ─────────────────────────────────────────────────
+# Cheapest model that can handle each complexity tier.
+# Override with env vars MODEL_MINI / MODEL_STANDARD / MODEL_POWER.
+smart_routing:
+  enabled: true
+  tiers:
+    mini:     anthropic/claude-haiku-4.5      # simple Q&A, greetings (cheapest)
+    standard: anthropic/claude-sonnet-4.6     # coding, analysis, creative (default)
+    power:    anthropic/claude-opus-4.6       # deep research, architecture (powerful)
+
+# ── Skills Registry ───────────────────────────────────────────────
+# These appear in the frontend Skills tab and auto-detect from chat.
+# To ADD a skill: copy any block, change id/name/icon/color/tags.
+skills:
+
+  - id: promo
+    name: Promo Scriptwriter
+    icon: "🎬"
+    color: "#ef4444"
+    level: Master
+    tags: [script, promo, vo, dialect, 30s, 60s, 15s, recap, bhojpuri, haryanvi]
+
+  - id: architect
+    name: AI Tool Architect
+    icon: "🏗️"
+    color: "#3b82f6"
+    level: Master
+    tags: [fastapi, react, api, backend, pipeline, ffmpeg, system, architecture, docker]
+
+  - id: daksh
+    name: DAKSH Orchestrator
+    icon: "⚡"
+    color: "#f59e0b"
+    level: Master
+    tags: [daksh, pipeline, orchestrate, full, launch, season, batch, sprint]
+
+  - id: regional
+    name: Regional Language
+    icon: "🗣️"
+    color: "#10b981"
+    level: Expert
+    tags: [bhojpuri, haryanvi, rajasthani, gujarati, marathi, dialect, translate, convert, regional]
+
+  - id: elevenlabs
+    name: ElevenLabs Voice
+    icon: "🎙️"
+    color: "#8b5cf6"
+    level: Master
+    tags: [elevenlabs, voice, vo, tts, audio, synthesis, ssml, clone]
+
+  - id: remotion
+    name: Remotion Engine
+    icon: "🎥"
+    color: "#ec4899"
+    level: Expert
+    tags: [remotion, video, render, animation, template, react, programmatic]
+
+  - id: creative
+    name: Creative Director
+    icon: "🎭"
+    color: "#f97316"
+    level: Expert
+    tags: [film, cinema, shot, storyboard, mood, treatment, runway, midjourney, sora, director]
+
+  - id: competitor
+    name: Competitor Intel
+    icon: "🔍"
+    color: "#06b6d4"
+    level: Expert
+    tags: [competitor, jiocinema, zee5, mx, ullu, market, benchmark, ott]
+
+  - id: mckinsey
+    name: McKinsey Research
+    icon: "📊"
+    color: "#14b8a6"
+    level: Expert
+    tags: [mckinsey, research, tam, sam, som, market, sizing, strategy, mece, pyramid]
+
+  - id: calendar
+    name: Calendar & Gmail
+    icon: "📅"
+    color: "#a855f7"
+    level: Proficient
+    tags: [calendar, schedule, festival, release, sprint, plan, quarter, gmail, email, inbox]
+
+  - id: asset
+    name: Asset Pipeline
+    icon: "🗄️"
+    color: "#64748b"
+    level: Expert
+    tags: [asset, footage, clip, whisper, chromadb, tag, ingest, search]
+
+  - id: motion
+    name: Motion & Promo
+    icon: "✨"
+    color: "#e11d48"
+    level: Master
+    tags: [after effects, davinci, mogrt, fusion, motion, template, pacing, cuts]
+
+  - id: okr
+    name: OKR & Strategy
+    icon: "📈"
+    color: "#059669"
+    level: Proficient
+    tags: [okr, deck, pitch, investor, qbr, leadership, strategy, presentation]
+
+  - id: video
+    name: Video Analyst
+    icon: "🔬"
+    color: "#7c3aed"
+    level: Proficient
+    tags: [analyze, video, tag, metadata, hook, detect, organize, catalog]
+
+  - id: whatsapp
+    name: WhatsApp Automation
+    icon: "💬"
+    color: "#25d366"
+    level: Expert
+    tags: [whatsapp, message, chat, automate, bot, wa, notify, send]
+
+  - id: telegram
+    name: Telegram Bot
+    icon: "✈️"
+    color: "#229ed9"
+    level: Expert
+    tags: [telegram, bot, channel, group, notify, message, broadcast]
+
+  - id: smartroute
+    name: Smart Model Router
+    icon: "🔀"
+    color: "#f59e0b"
+    level: Master
+    tags: [smart, route, model, cost, token, mini, standard, power, cheap, optimize]
+
+  - id: converter
+    name: Script Converter
+    icon: "🔄"
+    color: "#0891b2"
+    level: Expert
+    tags: [convert, script, language, 4 languages, regional, translate]
+
+  # ── ADD YOUR OWN SKILLS BELOW ──────────────────────────────────
+  # Example:
+  # - id: my_skill
+  #   name: My Custom Skill
+  #   icon: "🚀"
+  #   color: "#ff6b6b"
+  #   level: Expert            # Master | Expert | Proficient
+  #   tags: [my, custom, tags]
+
+
+# ── Tools Registry ────────────────────────────────────────────────
+# enabled: false  → tool hidden from agent (won't be called)
+# Builtin tools: write_file, read_file, list_files, run_command,
+#                elevenlabs_tts, web_search,
+#                calendar_list_events, calendar_create_event,
+#                gmail_list_emails, gmail_send_email
+tools:
+  write_file:           { enabled: true }
+  read_file:            { enabled: true }
+  list_files:           { enabled: true }
+  run_command:          { enabled: true }
+  elevenlabs_tts:       { enabled: true }
+  web_search:           { enabled: true }
+  calendar_list_events: { enabled: true }
+  calendar_create_event:{ enabled: true }
+  gmail_list_emails:    { enabled: true }
+  gmail_send_email:     { enabled: true }
+
+  # ── ADD CUSTOM TOOLS BELOW ─────────────────────────────────────
+  # Custom tools need a matching Python function in backend/custom_tools.py
+  # Example:
+  # notion_search:
+  #   enabled: true
+  #   description: "Search Notion workspace"
+  #   parameters:
+  #     query: { type: string, required: true, description: "Search query" }
+
+
+# ── Quick Actions (chat welcome screen buttons) ───────────────────
+quick_actions:
+  - label: "🎬 Write a Promo Script"
+    prompt: "Ek Bhojpuri action show ke liye 30s TV promo script likh — show name 'Baaghi Birju', story: ek gaon ka ladka jo zamindar ke khilaf khada hota hai"
+
+  - label: "🏗️ Architect a Tool"
+    prompt: "Mujhe ek asset search tool banana hai jo natural language query se footage dhundhe — architecture bata"
+
+  - label: "⚡ DAKSH Full Pipeline"
+    prompt: "DAKSH activate karo — naya show launch: 'Dil Ki Zameen', Haryanvi, emotional drama, synopsis: ek ladki apne baap ki zameen bachane ke liye court jaati hai"
+
+  - label: "📊 Market Research"
+    prompt: "India ke regional OTT market ka McKinsey-style analysis chahiye — TAM/SAM/SOM with Stage ka competitive positioning"
+
+  - label: "💬 WhatsApp Setup Guide"
+    prompt: "Mujhe step-by-step batao MANIK.AI ko WhatsApp se kaise connect karun — Meta Cloud API free setup"
+
+  - label: "🔀 Smart Router Test"
+    prompt: "Explain how your smart model routing works — which tier would you pick for different types of tasks?"
