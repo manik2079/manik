@@ -46,11 +46,11 @@ const QUICK_ACTIONS = [
   { label: "🔀 Smart Router Test", prompt: "Explain how your smart model routing works — which tier would you pick for different types of tasks and why?" },
 ];
 
-function detectSkills(msg) {
+function detectSkills(msg, skillList) {
   const lower = msg.toLowerCase();
   const activated = [];
-  for (const skill of SKILLS) {
-    const matchCount = skill.tags.filter(t => lower.includes(t)).length;
+  for (const skill of skillList) {
+    const matchCount = (skill.tags || []).filter(t => lower.includes(t)).length;
     if (matchCount > 0) activated.push({ ...skill, matchCount });
   }
   activated.sort((a, b) => b.matchCount - a.matchCount);
@@ -65,8 +65,21 @@ export default function ManikAI() {
   const [learnedSkills] = useState([]);
   const [stats, setStats] = useState({ totalMsgs: 0, skillsUsed: new Set(), streak: 0 });
   const [view, setView] = useState("chat");
+  const [skills, setSkills] = useState(SKILLS);
+  const [quickActions, setQuickActions] = useState(QUICK_ACTIONS);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Fetch skills + quick actions from backend config (manik.config.yaml)
+  useEffect(() => {
+    fetch(`${API_BASE}/api/config`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.skills?.length) setSkills(data.skills);
+        if (data.quick_actions?.length) setQuickActions(data.quick_actions);
+      })
+      .catch(() => {}); // fallback to hardcoded defaults on error
+  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,7 +87,7 @@ export default function ManikAI() {
 
   const sendMessage = useCallback(async (text) => {
     if (!text.trim()) return;
-    const detected = detectSkills(text);
+    const detected = detectSkills(text, skills);
     setActiveSkills(detected);
     setMessages(prev => [...prev, { role: "user", content: text, ts: Date.now() }]);
     setInput("");
@@ -287,7 +300,7 @@ export default function ManikAI() {
                   gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                   gap: 8, width: "100%", maxWidth: 640, marginTop: 8,
                 }}>
-                  {QUICK_ACTIONS.map((qa, i) => (
+                  {quickActions.map((qa, i) => (
                     <button key={i} onClick={() => sendMessage(qa.prompt)} style={{
                       padding: "10px 12px", fontSize: 11, textAlign: "left",
                       background: "#111", border: "1px solid #1f1f1f",
@@ -426,7 +439,7 @@ export default function ManikAI() {
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 10 }}>
-              {SKILLS.map(s => {
+              {skills.map(s => {
                 const used = stats.skillsUsed.has(s.id);
                 return (
                   <div key={s.id} style={{
@@ -616,7 +629,7 @@ export default function ManikAI() {
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                     {cat.skills.map((s, j) => {
-                      const skill = SKILLS.find(sk => sk.name === s);
+                      const skill = skills.find(sk => sk.name === s);
                       const used = skill && stats.skillsUsed.has(skill.id);
                       return (
                         <span key={j} style={{
@@ -703,7 +716,7 @@ export default function ManikAI() {
               Enter to send • Shift+Enter for newline
             </div>
             <div style={{ fontSize: 8, color: "#333" }}>
-              {SKILLS.length} skills loaded • Powered by Claude Sonnet
+              {skills.length} skills loaded • Powered by Claude Sonnet
             </div>
           </div>
         </div>

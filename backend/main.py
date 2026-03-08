@@ -18,6 +18,10 @@ from config import (
     WHATSAPP_ACCESS_TOKEN,
     WHATSAPP_VERIFY_TOKEN,
 )
+from plugin_loader import (
+    get_skills, get_quick_actions, get_active_tool_definitions,
+    get_personality_extra, get_agent_name, reload as reload_config,
+)
 from smart_router import smart_router
 from tools import TOOL_DEFINITIONS, execute_tool
 
@@ -129,7 +133,11 @@ def sse(event: dict) -> str:
 # ── Agentic Loop (streaming) ──────────────────────────────────────────────────
 
 async def agentic_loop(request: ChatRequest) -> AsyncGenerator[str, None]:
+    # Merge base prompt + config personality_extra + request system_extra
     system = MANIK_SYSTEM_PROMPT
+    extra = get_personality_extra()
+    if extra:
+        system += f"\n\n{extra}"
     if request.system_extra:
         system += f"\n\n{request.system_extra}"
 
@@ -155,7 +163,7 @@ async def agentic_loop(request: ChatRequest) -> AsyncGenerator[str, None]:
             model=model,
             max_tokens=MAX_TOKENS,
             system=system,
-            tools=TOOL_DEFINITIONS,
+            tools=get_active_tool_definitions(TOOL_DEFINITIONS),
             messages=messages,
         )
 
@@ -336,3 +344,23 @@ async def whatsapp_message(request: Request):
     payload = await request.json()
     asyncio.create_task(whatsapp_connector.handle_payload(payload))
     return {"status": "ok"}
+
+
+@app.get("/api/config")
+async def get_config():
+    """Serve manik.config.yaml to the frontend — skills, quick actions, agent meta."""
+    return {
+        "agent": {
+            "name": get_agent_name(),
+        },
+        "skills": get_skills(),
+        "quick_actions": get_quick_actions(),
+        "smart_routing": smart_router.TIERS,
+    }
+
+
+@app.post("/api/config/reload")
+async def reload_cfg():
+    """Hot-reload manik.config.yaml without restarting the server."""
+    reload_config()
+    return {"status": "reloaded", "skills": len(get_skills())}

@@ -7,6 +7,7 @@ pydantic
 
 # Tools
 requests
+pyyaml
 duckduckgo-search
 
 # Messaging connectors (optional — uncomment if you use Telegram)
