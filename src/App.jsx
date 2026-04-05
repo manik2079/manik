@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { SKILLS, QUICK_ACTIONS, API_BASE, TIER_STYLE, detectSkills } from "./constants";
+import { SKILLS, QUICK_ACTIONS, API_BASE, detectSkills } from "./constants";
 import Header from "./components/Header";
 import ChatView from "./components/ChatView";
 import SkillsPanel from "./components/SkillsPanel";
