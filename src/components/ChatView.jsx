@@ -1,4 +1,4 @@
-import { TIER_STYLE } from "../constants.js";
+import { TIER_STYLE } from "../constants";
 
 export default function ChatView({ messages, loading, activeSkills, quickActions, sendMessage, skills, stats, chatEndRef }) {
   return (

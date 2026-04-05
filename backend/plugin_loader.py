@@ -82,7 +82,10 @@ def get_active_tool_definitions(all_tool_definitions: list[dict]) -> list[dict]:
         if enabled:
             active.append(tool)
 
-    disabled = [t["name"] for t in all_tool_definitions if t not in active]
+    disabled = [
+        t.get("function", {}).get("name") or t.get("name", "?")
+        for t in all_tool_definitions if t not in active
+    ]
     if disabled:
         logger.info(f"[plugin_loader] Disabled tools: {disabled}")
 
